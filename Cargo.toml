@@ -1,0 +1,18 @@
+[package]
+name = "api-db-seeder"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+fake = { version = "2.8", features = ["derive"] }
+diesel = { version = "2.1.0", features = [
+    "chrono",
+    "postgres",
+    "network-address",
+] }
+diesel_geometry = "1.4.0"
+dotenvy = "0.15"
+chrono = { version = "0.4.26", features = ["serde"] }
+ipnetwork = "0.20.0"
+uuid = { version = "1.4.1", features = ["v4"] }
+bcrypt = "0.15.0"
