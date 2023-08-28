@@ -53,7 +53,6 @@ pub struct Organization {
     pub created_at: DateTime<Utc>,
     pub updated_at: Option<DateTime<Utc>>,
     pub name: String,
-    pub deleted_at: Option<DateTime<Utc>>,
     pub blocked: bool,
     pub billing_email: String,
     pub billing_email_verified: bool,
