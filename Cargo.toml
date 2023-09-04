@@ -14,5 +14,4 @@ diesel_geometry = "1.4.0"
 dotenvy = "0.15"
 chrono = { version = "0.4.26", features = ["serde"] }
 ipnetwork = "0.20.0"
-uuid = { version = "1.4.1", features = ["v4"] }
 bcrypt = "0.15.0"

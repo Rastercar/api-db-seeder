@@ -1,7 +1,6 @@
 pub mod models;
 pub mod schema;
 
-use ::uuid::Uuid;
 use diesel::pg::PgConnection;
 use diesel::{insert_into, prelude::*};
 use dotenvy::dotenv;
