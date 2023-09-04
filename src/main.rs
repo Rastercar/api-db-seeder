@@ -35,10 +35,6 @@ fn seed_db(conn: &mut PgConnection) {
         fake_root_user_with_user_org(conn);
     }
 
-    for _ in 1..10 {
-        fake_unregistered_user(conn);
-    }
-
     for _ in 1..5 {
         fake_master_user(conn);
     }
@@ -96,9 +92,7 @@ fn create_default_test_users(conn: &mut PgConnection) {
                 email.eq("rastercar.tests.002@gmail.com"),
                 username.eq("test user"),
                 email_verified.eq(true),
-                password.eq(hash_password(
-                    faker::internet::en::Password(10..50).fake::<String>(),
-                )),
+                password.eq(hash_password(String::from("testuser"))),
                 description.eq(faker::lorem::en::Words(1..3)
                     .fake::<Vec<String>>()
                     .join(" ")),
@@ -212,20 +206,4 @@ fn fake_root_user_with_user_org(conn: &mut PgConnection) -> models::User {
     }
 
     created_user
-}
-
-fn fake_unregistered_user(conn: &mut PgConnection) -> models::UnregisteredUser {
-    use schema::unregistered_user::dsl::*;
-
-    insert_into(unregistered_user)
-        .values((
-            email.eq(faker::internet::en::SafeEmail().fake::<String>()),
-            username.eq(faker::internet::en::Username().fake::<String>()),
-            uuid.eq(Uuid::new_v4().to_string()),
-            email_verified.eq(faker::boolean::en::Boolean(50).fake::<bool>()),
-            oauth_provider.eq("google"),
-            oauth_profile_id.eq(faker::lorem::en::Word().fake::<String>()),
-        ))
-        .get_result::<models::UnregisteredUser>(conn)
-        .unwrap()
 }
