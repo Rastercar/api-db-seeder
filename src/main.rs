@@ -27,15 +27,12 @@ fn establish_connection() -> PgConnection {
 }
 
 fn seed_db(conn: &mut PgConnection) {
-    create_default_test_users(conn);
-    create_default_master_user(conn);
+    // maintain this order
+    create_default_test_master_user(conn);
+    create_default_test_user(conn);
 
     for _ in 1..20 {
         fake_root_user_with_user_org(conn);
-    }
-
-    for _ in 1..5 {
-        fake_master_user(conn);
     }
 }
 
@@ -43,13 +40,12 @@ fn hash_password(plain: String) -> String {
     bcrypt::hash(plain, 12).unwrap().to_string()
 }
 
-fn create_default_master_user(conn: &mut PgConnection) {
-    use schema::master_user::dsl::*;
+fn create_default_test_master_user(conn: &mut PgConnection) {
+    use schema::user::dsl::*;
 
     let test_master_user_access_level = fake_access_level(conn, true);
-    let test_master_user_master_access_level = fake_master_access_level(conn, true);
 
-    insert_into(master_user)
+    insert_into(user)
         .values((
             username.eq("test master user"),
             password.eq(hash_password(
@@ -58,13 +54,12 @@ fn create_default_master_user(conn: &mut PgConnection) {
             email.eq("rastercar.tests.001@gmail.com"),
             email_verified.eq(true),
             access_level_id.eq(test_master_user_access_level.id),
-            master_access_level_id.eq(test_master_user_master_access_level.id),
         ))
-        .get_result::<models::MasterUser>(conn)
+        .get_result::<models::User>(conn)
         .unwrap();
 }
 
-fn create_default_test_users(conn: &mut PgConnection) {
+fn create_default_test_user(conn: &mut PgConnection) {
     let test_user_organization = {
         use schema::organization::dsl::*;
 
@@ -101,27 +96,6 @@ fn create_default_test_users(conn: &mut PgConnection) {
     };
 }
 
-fn fake_master_user(conn: &mut PgConnection) {
-    use schema::master_user::dsl::*;
-
-    let test_master_user_access_level = fake_access_level(conn, true);
-    let test_master_user_master_access_level = fake_master_access_level(conn, true);
-
-    insert_into(master_user)
-        .values((
-            username.eq(faker::internet::en::Username().fake::<String>()),
-            password.eq(hash_password(
-                faker::internet::en::Password(10..50).fake::<String>(),
-            )),
-            email.eq(faker::internet::en::SafeEmail().fake::<String>()),
-            email_verified.eq(faker::boolean::en::Boolean(50).fake::<bool>()),
-            access_level_id.eq(test_master_user_access_level.id),
-            master_access_level_id.eq(test_master_user_master_access_level.id),
-        ))
-        .get_result::<models::MasterUser>(conn)
-        .unwrap();
-}
-
 fn fake_organization(conn: &mut PgConnection) -> models::Organization {
     use schema::organization::dsl::*;
 
@@ -149,25 +123,6 @@ fn fake_access_level(conn: &mut PgConnection, is_fixed_value: bool) -> models::A
             permissions.eq(vec!["CREATE_VEHICLE", "CREATE_SOMETHING"]),
         ))
         .get_result::<models::AccessLevel>(conn)
-        .unwrap()
-}
-
-fn fake_master_access_level(
-    conn: &mut PgConnection,
-    is_fixed_value: bool,
-) -> models::MasterAccessLevel {
-    use schema::master_access_level::dsl::*;
-
-    insert_into(master_access_level)
-        .values((
-            name.eq(faker::lorem::en::Word().fake::<String>()),
-            is_fixed.eq(is_fixed_value),
-            description.eq(faker::lorem::en::Words(2..7)
-                .fake::<Vec<String>>()
-                .join(" ")),
-            permissions.eq(vec!["CREATE_VEHICLE", "CREATE_SOMETHING"]),
-        ))
-        .get_result::<models::MasterAccessLevel>(conn)
         .unwrap()
 }
 
