@@ -47,10 +47,8 @@ fn create_default_test_master_user(conn: &mut PgConnection) {
 
     insert_into(user)
         .values((
-            username.eq("test master user"),
-            password.eq(hash_password(
-                faker::internet::en::Password(10..50).fake::<String>(),
-            )),
+            username.eq("test_master_user"),
+            password.eq(hash_password(String::from("testmasteruser"))),
             email.eq("rastercar.tests.001@gmail.com"),
             email_verified.eq(true),
             access_level_id.eq(test_master_user_access_level.id),
@@ -84,7 +82,7 @@ fn create_default_test_user(conn: &mut PgConnection) {
                 organization_id.eq(test_user_organization.id),
                 access_level_id.eq(test_user_access_level.id),
                 email.eq("rastercar.tests.002@gmail.com"),
-                username.eq("test user"),
+                username.eq("test_user"),
                 email_verified.eq(true),
                 password.eq(hash_password(String::from("testuser"))),
                 description.eq(faker::lorem::en::Words(1..3)
