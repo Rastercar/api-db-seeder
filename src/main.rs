@@ -43,7 +43,7 @@ fn hash_password(plain: String) -> String {
 fn create_default_test_master_user(conn: &mut PgConnection) {
     use schema::user::dsl::*;
 
-    let test_master_user_access_level = fake_access_level(conn, true);
+    let test_master_user_access_level = fake_access_level(conn, true, None);
 
     insert_into(user)
         .values((
@@ -72,7 +72,7 @@ fn create_default_test_user(conn: &mut PgConnection) {
             .unwrap()
     };
 
-    let test_user_access_level = fake_access_level(conn, true);
+    let test_user_access_level = fake_access_level(conn, true, Some(test_user_organization.id));
 
     {
         use schema::user::dsl::*;
@@ -108,7 +108,11 @@ fn fake_organization(conn: &mut PgConnection) -> models::Organization {
         .unwrap()
 }
 
-fn fake_access_level(conn: &mut PgConnection, is_fixed_value: bool) -> models::AccessLevel {
+fn fake_access_level(
+    conn: &mut PgConnection,
+    is_fixed_value: bool,
+    organization_id_value: Option<i32>,
+) -> models::AccessLevel {
     use schema::access_level::dsl::*;
 
     insert_into(access_level)
@@ -119,6 +123,7 @@ fn fake_access_level(conn: &mut PgConnection, is_fixed_value: bool) -> models::A
                 .fake::<Vec<String>>()
                 .join(" ")),
             permissions.eq(vec!["CREATE_VEHICLE", "CREATE_SOMETHING"]),
+            organization_id.eq(organization_id_value),
         ))
         .get_result::<models::AccessLevel>(conn)
         .unwrap()
@@ -128,7 +133,7 @@ fn fake_root_user_with_user_org(conn: &mut PgConnection) -> models::User {
     use schema::user::dsl::*;
 
     let user_org = fake_organization(conn);
-    let access_level = fake_access_level(conn, true);
+    let access_level = fake_access_level(conn, true, Some(user_org.id));
 
     let created_user = insert_into(user)
         .values((

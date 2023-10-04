@@ -77,19 +77,6 @@ diesel::table! {
 }
 
 diesel::table! {
-    spatial_ref_sys (srid) {
-        srid -> Int4,
-        #[max_length = 256]
-        auth_name -> Nullable<Varchar>,
-        auth_srid -> Nullable<Int4>,
-        #[max_length = 2048]
-        srtext -> Nullable<Varchar>,
-        #[max_length = 2048]
-        proj4text -> Nullable<Varchar>,
-    }
-}
-
-diesel::table! {
     user (id) {
         id -> Int4,
         created_at -> Timestamptz,
@@ -192,7 +179,6 @@ diesel::allow_tables_to_appear_in_same_query!(
     organization,
     session,
     sim_card,
-    spatial_ref_sys,
     user,
     vehicle,
     vehicle_tracker,
