@@ -122,7 +122,7 @@ fn fake_access_level(
             description.eq(faker::lorem::en::Words(2..7)
                 .fake::<Vec<String>>()
                 .join(" ")),
-            permissions.eq(vec!["CREATE_VEHICLE", "CREATE_SOMETHING"]),
+            permissions.eq(vec!["UPDATE_ORGANIZATION"]),
             organization_id.eq(organization_id_value),
         ))
         .get_result::<models::AccessLevel>(conn)
