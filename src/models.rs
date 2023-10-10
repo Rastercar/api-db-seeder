@@ -123,6 +123,7 @@ pub struct VehicleTrackerLocation {
 #[diesel(primary_key(session_token))]
 #[diesel(table_name = crate::schema::session)]
 pub struct Session {
+    pub public_id: i32,
     pub session_token: Vec<u8>,
     pub created_at: DateTime<Utc>,
     pub expires_at: DateTime<Utc>,
