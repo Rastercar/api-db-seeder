@@ -9,7 +9,6 @@ use ipnetwork::IpNetwork;
 pub struct AccessLevel {
     pub id: i32,
     pub created_at: DateTime<Utc>,
-    pub updated_at: Option<DateTime<Utc>>,
     pub name: String,
     pub description: String,
     pub is_fixed: bool,
@@ -23,7 +22,6 @@ pub struct AccessLevel {
 pub struct Organization {
     pub id: i32,
     pub created_at: DateTime<Utc>,
-    pub updated_at: Option<DateTime<Utc>>,
     pub name: String,
     pub blocked: bool,
     pub billing_email: String,
@@ -36,7 +34,6 @@ pub struct Organization {
 pub struct SimCard {
     pub id: i32,
     pub created_at: DateTime<Utc>,
-    pub updated_at: Option<DateTime<Utc>>,
     pub phone_number: String,
     pub ssn: String,
     pub apn_address: String,
@@ -55,7 +52,6 @@ pub struct SimCard {
 pub struct User {
     pub id: i32,
     pub created_at: DateTime<Utc>,
-    pub updated_at: Option<DateTime<Utc>>,
     pub username: String,
     pub email: String,
     pub email_verified: bool,
@@ -73,7 +69,6 @@ pub struct User {
 pub struct Vehicle {
     pub id: i32,
     pub created_at: DateTime<Utc>,
-    pub updated_at: Option<DateTime<Utc>>,
     pub plate: String,
     pub photo: Option<String>,
     pub model_year: Option<i16>,
@@ -93,7 +88,6 @@ pub struct Vehicle {
 pub struct VehicleTracker {
     pub id: i32,
     pub created_at: DateTime<Utc>,
-    pub updated_at: Option<DateTime<Utc>>,
     pub model: String,
     pub imei: String,
     pub in_maintenance: bool,
