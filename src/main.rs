@@ -37,7 +37,8 @@ fn seed_db(conn: &mut PgConnection) {
 }
 
 fn hash_password(plain: String) -> String {
-    bcrypt::hash(plain, 12).unwrap().to_string()
+    // use the lowest cost (4) since we do not care about security of seeded data
+    bcrypt::hash(plain, 4).unwrap().to_string()
 }
 
 fn create_default_test_master_user(conn: &mut PgConnection) {
