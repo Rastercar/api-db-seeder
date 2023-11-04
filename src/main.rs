@@ -17,6 +17,26 @@ fn main() {
     println!("seeding finished");
 }
 
+use convert_case::{Case, Casing};
+use strum::{Display, EnumIter, IntoEnumIterator};
+
+#[derive(Debug, EnumIter, Display, Clone)]
+pub enum Permission {
+    CreateVehicle,
+    UpdateVehicle,
+    DeleteVehicle,
+    UpdateOrganization,
+}
+
+impl Permission {
+    /// Creates a string vector containing all the permissions in screaming snake case format
+    pub fn to_string_vec() -> Vec<String> {
+        Permission::iter()
+            .map(|e| e.to_string().to_case(Case::ScreamingSnake))
+            .collect::<Vec<_>>()
+    }
+}
+
 fn establish_connection() -> PgConnection {
     dotenv().ok();
 
@@ -123,7 +143,7 @@ fn fake_access_level(
             description.eq(faker::lorem::en::Words(2..7)
                 .fake::<Vec<String>>()
                 .join(" ")),
-            permissions.eq(vec!["UPDATE_ORGANIZATION"]),
+            permissions.eq(Permission::to_string_vec()),
             organization_id.eq(organization_id_value),
         ))
         .get_result::<models::AccessLevel>(conn)
